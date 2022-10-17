@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import AuthRoute from './routes/authRoutes.js';
+import UserRoute from './routes/userRoutes.js';
 
 // instantiate
 const app = express();
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 // routes
 app.use('/auth', AuthRoute);
+app.use('/user', UserRoute);
 
 
 app.listen(process.env.PORT, console.log(`Server running....`));
