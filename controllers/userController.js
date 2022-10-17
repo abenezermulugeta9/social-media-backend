@@ -86,3 +86,27 @@ export const followUser = async (req, res) => {
         }
     }
 }
+
+export const unfollowUser = async (req, res) => {
+    const { id } = req.params; 
+    const { currentUserId } = req.body; 
+
+    if(currentUserId === id) res.status(403).json(`Action forbidden! You cannot un-follow yourself. `); 
+    else {
+        try {
+            const followedUser = await UserModel.findById(id); 
+            const followerUser = await UserModel.findById(currentUserId); 
+
+            if(followedUser.followers.includes(currentUserId)) {
+                await followedUser.updateOne({ $pull: { followers: currentUserId } }); 
+                await followerUser.updateOne({ $pull: { following: id } }); 
+                res.status(200).json(`You stopped following this user.`); 
+            } else {
+                res.status(403).json(`You are not following this user.`); 
+            }
+        } catch (error) {
+            res.status(500).json(error);            
+        }
+    }
+
+}
